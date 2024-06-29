@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - myapp-mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=converteeUser@123
+
+  web:
+    build: .
+    command: bash -c "entrypoint.sh && bash init.sh"
+    restart: on-failure
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+  redis:
+    image: redis:latest
+    restart: on-failure
+    ports:
+      - "6379:6479"
+volumes:
+  myapp-mysql-data:
