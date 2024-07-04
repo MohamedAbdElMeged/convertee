@@ -1,24 +1,11 @@
-# README
+# Convertee
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Backend Service to convert images, videos, fonts
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Tech Stack:
+- Ruby on Rails
+- MySQL
+- Docker
+- Docker Compose
+- Sidekiq
+- Redis
