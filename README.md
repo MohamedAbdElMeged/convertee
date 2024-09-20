@@ -1,4 +1,4 @@
-### Backend Service to convert images, videos, fonts ###
+### Backend Service to convert images, videos, fonts
 
 Tech Stack:
 
@@ -8,3 +8,7 @@ Tech Stack:
 - Docker Compose
 - Sidekiq
 - Redis
+
+to do
+pass paramater convert_to
+validate transition

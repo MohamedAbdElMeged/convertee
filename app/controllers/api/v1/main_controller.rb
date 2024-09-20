@@ -1,35 +1,47 @@
 class Api::V1::MainController < ApplicationController
   require 'mini_magick'
-    
+    SUPPORTED_FILE_TRANSITIONS = {
+      image: ["jpeg", "jpg", "png", "gif", "bmp", "tiff", "tif", "svg", "webp"],
+      video: ["mp4", "avi", "mov", "mkv", "flv", "wmv", "webm", "mpeg", "mpg"],
+      font: ["ttf", "otf", "woff", "woff2", "eot", "svg"]
+    }
     def convert
-      
-      if params[:image].present?
-        image = params[:image]
-        
+      file = convert_params[:file]
+      return render json: { error: "file should be passed"} unless file
+      content_type = file.content_type
+      case content_type
+      when /\Aimage\//
         begin
-          # byebug
-          tempfile = image.tempfile
-          
-          # Open the image using MiniMagick
+          tempfile = file.tempfile
           img = MiniMagick::Image.open(tempfile.path)
           
-          # Change the format to PNG
           img.format "png"
-          output_path = Rails.root.join('public', 'uploads', "converted_image.png")
+          output_path = Rails.root.join('public', 'uploads', "converted_image_01.png")
           img.write(output_path)
           
-          # Get the URL of the saved file
-          url = request.base_url + '/uploads/converted_image.png'
-          
-          # Respond with the URL of the converted file
+          url = request.base_url + '/uploads/converted_image_01.png'
+
           render json: { url: url }
 
         rescue MiniMagick::Error => e
-          # Handle MiniMagick errors
           render json: { error: "Error processing image: #{e.message}" }, status: :unprocessable_entity
         end
+      when /\Avideo\//
+        render json:  "This is a video file"
+      when /\Afont\//
+        render json:  "This is a font file"
       else
-        render json: { error: "No image uploaded!" }, status: :unprocessable_entity
+        render json:  "Unknown file type"
       end
+
+
+      # if params[:image].present?
+      # else
+      #   render json: { error: "No image uploaded!" }, status: :unprocessable_entity
+      # end
     end
+    def convert_params
+      params.require(:converter).permit(:file, :convert_to)
+    end
+    
 end
